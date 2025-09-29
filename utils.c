@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leonardo_ouza <leonardo_ouza@student.42    +#+  +:+       +#+        */
+/*   By: leonasil <leonasil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 18:48:07 by leonardo_ou       #+#    #+#             */
-/*   Updated: 2025/09/23 20:47:02 by leonardo_ou      ###   ########.fr       */
+/*   Updated: 2025/09/25 14:16:36 by leonasil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,30 +27,32 @@ void	print_op(char op_type, char stk_id, int is_reverse)
 	ft_putchar_fd(stk_id, 1);
 	ft_putchar_fd('\n', 1);
 }
-void	move_two_smallest(t_node **src_stack, t_node **dest_stack, size_t total_size)
+
+void	move_two_smallest(t_node **src_stk, t_node **dest_stk, size_t t_size)
 {
 	size_t	n_moved;
 	t_node	*smallest_node;
 
 	n_moved = 0;
-	while (n_moved < total_size - 3)
+	while (n_moved < t_size - 3)
 	{
-		smallest_node = find_min_value_node(*src_stack);
-		if (smallest_node->original_pos > total_size / 2)
+		smallest_node = find_min_value_node(*src_stk);
+		if (smallest_node->original_pos > t_size / 2)
 		{
-			while ((*src_stack)->value != smallest_node->value)
-				reverse_rotate_stk(src_stack, 'a');
+			while ((*src_stk)->value != smallest_node->value)
+				reverse_rotate_stk(src_stk, 'a');
 		}
 		else
 		{
-			while ((*src_stack)->value != smallest_node->value)
-				rotate_stk(src_stack, 'a');
+			while ((*src_stk)->value != smallest_node->value)
+				rotate_stk(src_stk, 'a');
 		}
-		push(src_stack, dest_stack, 'b');
+		push(src_stk, dest_stk, 'b');
 		n_moved++;
 		free(smallest_node);
 	}
 }
+
 void	sort_three_elements(t_node **stk, int values[3])
 {
 	if (values[0] > values[1] && values[0] < values[2])
@@ -73,4 +75,3 @@ void	sort_three_elements(t_node **stk, int values[3])
 	else
 		reverse_rotate_stk(stk, 'a');
 }
-
