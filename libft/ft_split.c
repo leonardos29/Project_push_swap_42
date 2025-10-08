@@ -6,7 +6,7 @@
 /*   By: leonasil <leonasil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 18:16:21 by leonasil          #+#    #+#             */
-/*   Updated: 2025/10/08 14:07:05 by leonasil         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:25:36 by leonasil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ static char	*remove_tabs(const char *s)
 			new_s[j] = s[i];
 			j++;
 		}
+		new_s[j++] = ' ';
 		i++;
 	}
 	new_s[j] = '\0';
