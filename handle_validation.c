@@ -6,7 +6,7 @@
 /*   By: leonasil <leonasil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/23 12:42:01 by leonardo_ou       #+#    #+#             */
-/*   Updated: 2025/09/25 14:03:09 by leonasil         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:43:30 by leonasil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	ft_atoi_and_check(const char *str, long *result)
 		sign *= -1;
 		str++;
 	}
+	else if (*str == '+')
+		str++;
 	if (!*str)
 		return (1);
 	while (str[i])
