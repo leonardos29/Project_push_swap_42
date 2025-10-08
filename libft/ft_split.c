@@ -6,11 +6,39 @@
 /*   By: leonasil <leonasil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 18:16:21 by leonasil          #+#    #+#             */
-/*   Updated: 2025/04/26 18:12:50 by leonasil         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:07:05 by leonasil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+
+static char	*remove_tabs(const char *s)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*new_s;
+
+	len = 0;
+	while (s[len])
+		len++;
+	new_s = malloc(len + 1);
+	if (!new_s)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s[i])
+	{
+		if (s[i] != '\t')
+		{
+			new_s[j] = s[i];
+			j++;
+		}
+		i++;
+	}
+	new_s[j] = '\0';
+	return (new_s);
+}
 
 static size_t	count_words(char const *s, char separator)
 
@@ -89,29 +117,17 @@ char	**ft_split(char const *s, char c)
 {
 	size_t	number_of_words;
 	char	**words_arr;
+	char	*split_char;
 
 	if (!s)
 		return (NULL);
-	number_of_words = count_words(s, c);
+	split_char = remove_tabs(s);
+	number_of_words = count_words(split_char, c);
 	words_arr = malloc((number_of_words + 1) * sizeof(char *));
 	if (!words_arr)
 		return (NULL);
 	words_arr[number_of_words] = NULL;
-	if (create_arr(words_arr, s, c))
+	if (create_arr(words_arr, split_char, c))
 		return (NULL);
 	return (words_arr);
 }
-/*
-int main()
-{
-	char **resultado;
-    int i = 0;
-    resultado = ft_split("ola,mundo,legal", ',');
-	while (resultado[i])
-	{
-		printf("%s \n",resultado[i]);
-		i++;
-	}
-	free (resultado);
-}
-*/
