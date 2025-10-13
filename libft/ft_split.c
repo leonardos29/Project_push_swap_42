@@ -6,7 +6,7 @@
 /*   By: leonasil <leonasil@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 18:16:21 by leonasil          #+#    #+#             */
-/*   Updated: 2025/10/09 21:25:12 by leonasil         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:22:17 by leonasil         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,91 +40,96 @@ static char	*remove_tabs(const char *s)
 	return (new_s);
 }
 
-static size_t	count_words(char const *s, char separator)
+static int	countword(const char *s, char c)
 {
-	size_t	count;
+	int	i;
+	int	countword;
 
-	count = 0;
-	while (*s)
+	i = 0;
+	countword = 0;
+	while (s[i])
 	{
-		while (*s == separator && *s)
-			s++;
-		if (!*s)
-			break ;
-		if (*s == '+' || *s == '-')
-			s++;
-		while (*s && *s != separator)
-			s++;
-		count++;
+		if (s[i] != c && (i == 0 || s[i - 1] == c))
+			countword++;
+		i++;
 	}
-	return (count);
+	return (countword);
 }
 
-static int	allocate_memory(char **arr, int arr_position, size_t size)
+static void	*allocate_word(const char *s, int start, int end)
+{
+	char	*word;
+	int		i;
+
+	i = 0;
+	if (!s || start >= end)
+		return (NULL);
+	word = malloc((end - start + 1) * sizeof(char));
+	if (!word)
+		return (NULL);
+	while (start < end)
+	{
+		word[i] = s[start];
+		i++;
+		start++;
+	}
+	word[i] = '\0';
+	return (word);
+}
+
+static void	*ft_free(char **strs, int count)
 {
 	int	i;
 
 	i = 0;
-	arr[arr_position] = malloc(size);
-	if (!arr[arr_position])
+	while (i < count)
 	{
-		while (i < arr_position)
-		{
-			free(arr[i]);
-			i++;
-		}
-		free(arr);
-		return (1);
+		free(strs[i]);
+		i++;
 	}
-	return (0);
+	free(strs);
+	return (NULL);
 }
 
-void	create_arr(char **arr, const char *s, char sep)
+static char	**create_arr(char **bi_array, const char *s, char c)
 {
-	size_t		len;
-	int			i;
-	const char	*w_start;
+	int	i;
+	int	word_start;
+	int	word_index;
 
 	i = 0;
-	while (*s)
+	word_index = 0;
+	word_start = 0;
+	while (s[i])
 	{
-		while (*s == sep && *s)
-			s++;
-		w_start = s;
-		len = 0;
-		if (*s == '+' || *s == '-')
+		if (s[i] != c)
 		{
-			s++;
-			len++;
+			word_start = i;
+			while (s[i] && s[i] != c)
+				i++;
+			bi_array[word_index] = allocate_word(s, word_start, i);
+			if (!bi_array[word_index])
+				return (ft_free(bi_array, word_index));
+			word_index++;
 		}
-		while (*s && *s != sep)
-		{
-			s++;
-			len++;
-		}
-		if (allocate_memory(arr, i, len + 1))
-			return ;
-		ft_strlcpy(arr[i++], w_start, len + 1);
+		else
+			i++;
 	}
+	return (bi_array);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	size_t	number_of_words;
-	char	**words_arr;
+	char	**bi_array;
 	char	*split_char;
 
 	if (!s)
 		return (NULL);
 	split_char = remove_tabs(s);
-	number_of_words = count_words(split_char, c);
-	words_arr = malloc((number_of_words + 1) * sizeof(char *));
-	if (!words_arr)
+	bi_array = ft_calloc(countword(split_char, c) + 1, sizeof(char *));
+	if (!bi_array)
 		return (NULL);
-	words_arr[number_of_words] = NULL;
-	create_arr(words_arr, split_char, c);
+	bi_array = create_arr(bi_array, split_char, c);
 	free(split_char);
-	if (!words_arr[0])
-		return (NULL);
-	return (words_arr);
+	return (bi_array);
 }
